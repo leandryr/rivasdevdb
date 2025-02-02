@@ -61,10 +61,65 @@ router.post("/", async (req, res) => {
     const userMailOptions = {
       from: `"RivasDev" <${process.env.EMAIL_USER}>`,
       to: email, // Enviar al usuario que completó el formulario
-      subject: "Gracias por contactarnos",
-      text: `Hola ${name},\n\nHemos recibido tu mensaje y te responderemos lo antes posible.\n\nTu mensaje:\n"${details}"\n\nGracias por comunicarte con RivasDev.\n\nSaludos,\nEl equipo de RivasDev`,
+      subject: "Gracias por contactarte con RivasDev",
+      html: `
+        <div style="font-family: Arial, sans-serif; background-color: #f4f4f7; padding: 30px; color: #333;">
+          <table style="width: 100%; max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <!-- Encabezado -->
+            <thead>
+              <tr>
+                <th style="background-color: #1e40af; padding: 20px; text-align: center; color: #ffffff;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: bold;">RivasDev</h1>
+                  <p style="margin: 0; font-size: 16px;">Transformando ideas en soluciones digitales</p>
+                </th>
+              </tr>
+            </thead>
+    
+            <!-- Cuerpo del mensaje -->
+            <tbody>
+              <tr>
+                <td style="padding: 20px; text-align: left;">
+                  <h2 style="color: #1e40af;">Hola, ${name} 👋</h2>
+                  <p style="font-size: 16px; line-height: 1.6;">
+                    Gracias por contactarte con <strong>RivasDev</strong>. Hemos recibido tu mensaje y uno de nuestros especialistas se pondrá en contacto contigo a la brevedad.
+                  </p>
+                  <p style="font-size: 16px; line-height: 1.6; background-color: #f4f4f7; padding: 15px; border-radius: 6px; border-left: 4px solid #1e40af;">
+                    <strong>Tu mensaje:</strong> "${details}"
+                  </p>
+                  <p style="font-size: 16px; line-height: 1.6;">
+                    Mientras tanto, te invitamos a explorar más sobre nuestros servicios y proyectos en nuestro sitio web.
+                  </p>
+                  <div style="text-align: center; margin: 20px 0;">
+                    <a href="https://www.rivasdev.com" 
+                       style="display: inline-block; padding: 12px 25px; font-size: 16px; color: #ffffff; background-color: #1e40af; text-decoration: none; border-radius: 6px;">
+                      Visitar nuestro sitio
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+    
+            <!-- Pie de página -->
+            <tfoot>
+              <tr>
+                <td style="background-color: #f4f4f7; padding: 20px; text-align: center; font-size: 14px; color: #555;">
+                  <p style="margin: 0;">
+                    <strong>RivasDev</strong> - Innovación y tecnología para tu éxito.
+                  </p>
+                  <p style="margin: 5px 0;">
+                    <a href="https://www.rivasdev.com" style="color: #1e40af; text-decoration: none;">www.rivasdev.com</a>
+                  </p>
+                  <p style="margin: 0;">
+                    <a href="mailto:info@rivasdev.com" style="color: #1e40af; text-decoration: none;">info@rivasdev.com</a>
+                  </p>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      `,
     };
-
+    
     console.log("📩 Enviando correo de confirmación al usuario...");
 
     // **4️⃣ Enviar ambos correos**
