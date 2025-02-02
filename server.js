@@ -7,15 +7,23 @@ require("dotenv").config({ path: ".env" }); // Cargar .env desde la raíz
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ Configurar CORS para permitir peticiones desde tu frontend en Vercel y localhost
+// ✅ Configurar CORS
 const allowedOrigins = [
-  "http://localhost:5173", // Desarrollo en Vite
-  "https://rivasdev.vercel.app" // Producción en Vercel
+  "http://localhost:5173",         // Desarrollo local
+  "https://rivasdev.vercel.app",   // Producción en Vercel
+  "https://rivasdev.com",          // Dominio principal
+  "https://www.rivasdev.com"       // Subdominio www
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Permitir cookies si es necesario
 }));
 
 // Middleware
@@ -23,7 +31,7 @@ app.use(bodyParser.json());
 
 // Conexión a MongoDB
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB conectado"))
   .catch((error) => console.error("❌ Error al conectar a MongoDB:", error));
 
@@ -39,6 +47,12 @@ app.use("/api/quotation", quotationRoutes); // Ruta para manejar las cotizacione
 // Ruta raíz
 app.get("/", (req, res) => {
   res.send("✅ Servidor funcionando correctamente 🚀");
+});
+
+// Manejo de errores genéricos
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send({ error: "Ocurrió un error en el servidor." });
 });
 
 // Inicio del servidor
