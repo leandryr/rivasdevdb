@@ -7,8 +7,16 @@ require("dotenv").config({ path: ".env" }); // Cargar .env desde la raíz
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ Configurar CORS para permitir peticiones desde tu frontend en Vercel
-app.use(cors({}));
+// ✅ Configurar CORS para permitir peticiones desde tu frontend en Vercel y localhost
+const allowedOrigins = [
+  "http://localhost:5173", // Desarrollo en Vite
+  "https://rivasdev.vercel.app" // Producción en Vercel
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 // Middleware
 app.use(bodyParser.json());
@@ -16,8 +24,8 @@ app.use(bodyParser.json());
 // Conexión a MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB conectado"))
-  .catch((error) => console.error("Error al conectar a MongoDB:", error));
+  .then(() => console.log("✅ MongoDB conectado"))
+  .catch((error) => console.error("❌ Error al conectar a MongoDB:", error));
 
 // Rutas
 const contactRoutes = require("./routes/contactRoutes"); // Ruta para el formulario de contacto
@@ -30,10 +38,10 @@ app.use("/api/quotation", quotationRoutes); // Ruta para manejar las cotizacione
 
 // Ruta raíz
 app.get("/", (req, res) => {
-  res.send("Servidor funcionando correctamente 🚀");
+  res.send("✅ Servidor funcionando correctamente 🚀");
 });
 
 // Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log(`✅ Servidor ejecutándose en http://localhost:${PORT}`);
 });
